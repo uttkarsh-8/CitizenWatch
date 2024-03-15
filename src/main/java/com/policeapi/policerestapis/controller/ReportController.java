@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reports")
@@ -123,4 +124,12 @@ public class ReportController {
 
         return ResponseEntity.ok().build();
     }
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ReportDto> updateReportStatus(@PathVariable long id, @RequestBody Map<String, String> statusBody) {
+        String status = statusBody.get("status");
+        ReportDto updatedReport = reportService.updateReportStatus(id, status);
+        return ResponseEntity.ok(updatedReport);
+    }
+
+
 }

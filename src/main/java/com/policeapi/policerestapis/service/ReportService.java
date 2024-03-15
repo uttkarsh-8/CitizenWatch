@@ -10,4 +10,5 @@ public interface ReportService {
     ReportDto getReportById(long id);
     ReportDto updateReport(ReportDto reportDto, long id);
     void deleteReport(long id);
+    ReportDto updateReportStatus(long id, String status);
 }

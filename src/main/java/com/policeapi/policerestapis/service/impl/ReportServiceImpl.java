@@ -8,7 +8,6 @@ import com.policeapi.policerestapis.repository.ReportRepository;
 import com.policeapi.policerestapis.repository.UserRepository;
 import com.policeapi.policerestapis.service.ReportService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -30,20 +29,19 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public ReportDto createReport(ReportDto reportDto) {
-        // Fetch the User entity using the userId from the ReportDto
+
+        if (reportDto.getStatus() == null || reportDto.getStatus().isEmpty()) {
+            reportDto.setStatus("IN_PROGRESS");
+        }
+
         User user = userRepository.findById(reportDto.getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + reportDto.getUserId()));
 
-        // DTO to entity
         Report report = modelMapper.map(reportDto, Report.class);
-
-        // Set the User entity to the report
         report.setUser(user);
 
-        // Save the Report entity
         Report savedReport = reportRepository.save(report);
 
-        // Entity to DTO
         return modelMapper.map(savedReport, ReportDto.class);
     }
 
@@ -66,22 +64,41 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public ReportDto updateReport(ReportDto reportDto, long id) {
-        Report report = reportRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Report not found with id: " + id));
 
-        report.setType(reportDto.getType());
+
+
+        Report report = reportRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Report not found with id: " + id));
+
         report.setTitle(reportDto.getTitle());
-        report.setLocation(reportDto.getLocation());
         report.setDescription(reportDto.getDescription());
+        report.setLocation(reportDto.getLocation());
+        report.setType(reportDto.getType());
         report.setImageUrl(reportDto.getImageUrl());
 
-        reportRepository.save(report);
+        report.setStatus(reportDto.getStatus());
 
-        return modelMapper.map(report, ReportDto.class);
+        Report updatedReport = reportRepository.save(report);
+
+        return modelMapper.map(updatedReport, ReportDto.class);
     }
+
+
 
     @Override
     public void deleteReport(long id) {
         reportRepository.deleteById(id);
 
+    }
+
+    @Override
+    public ReportDto updateReportStatus(long id, String status) {
+        Report report = reportRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Report not found with id: " + id));
+        report.setStatus(status);
+
+        Report updatedReport = reportRepository.save(report);
+
+        return modelMapper.map(updatedReport, ReportDto.class);
     }
 }

@@ -27,7 +27,7 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
+    private String status = "IN_PROGRESS";
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) { // Set createdAt only if it's not set already

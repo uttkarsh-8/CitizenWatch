@@ -19,4 +19,5 @@ public class ReportDto {
     private Date createdAt;
     private long userId;
     private String imageUrl;
+    private String status;
 }
