@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.xml.crypto.Data;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -17,7 +16,7 @@ public class ReportDto {
     private String description;
     private String location;
     private String type;
-    private Data createdAt;
+    private Date createdAt;
     private long userId;
-    private String imageUrls;
+    private String imageUrl;
 }
